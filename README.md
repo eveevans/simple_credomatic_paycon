@@ -1,6 +1,6 @@
 # SimpleCredomaticPaycon
 
-TODO: Write a gem description
+Simple Wrapper for interact with Credomatic Paycon
 
 ## Installation
 
@@ -18,7 +18,8 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+TODO: Improve documentation
+SimpleCredomaticPaycon::Transaction.new.pay(params*)
 
 ## Contributing
 
