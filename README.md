@@ -21,6 +21,10 @@ Or install it yourself as:
 TODO: Improve documentation
 SimpleCredomaticPaycon::Transaction.new.pay(params*)
 
+## Changelog
+
+This project uses [Semantic Versioning](http://semver.org/) for release numbering.
+
 ## Contributing
 
 1. Fork it
