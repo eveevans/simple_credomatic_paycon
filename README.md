@@ -19,7 +19,31 @@ Or install it yourself as:
 ## Usage
 
 TODO: Improve documentation
-SimpleCredomaticPaycon::Transaction.new.pay(params*)
+
+Create an object with the transaction information (including credomatic keys)
+
+``` ruby
+product_transaction = SimpleCredomaticPaycon::Transaction.new(
+  orderid: 'test-01', 
+  amount: '2.00', 
+  ccnumber: '1234567898765432', 
+  ccexp: '1216', 
+  cvv: '123', 
+  username: 'credomatic-username', 
+  key: 'credomatic-key', 
+  key_id: 'credomatic-key_id'
+)
+```
+
+Process the transaction (will do the request to Credomatic servers)
+```
+response = product_transaction.process 
+```
+
+
+## Notes
+The amount will be rounded to 2 decimals. 
+Ex: 2.256 will be 2.26
 
 ## Changelog
 
