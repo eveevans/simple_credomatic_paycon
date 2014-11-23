@@ -24,8 +24,6 @@ module SimpleCredomaticPaycon
       time = Time.now.to_i
       hash = Digest::MD5.hexdigest("#{@orderid}|#{@amount}|#{time}|#{@key}")
 
-      puts hash
-
       url = URI.parse("https://paycom.credomatic.com/PayComBackEndWeb/common/requestPaycomService.go")
       req = Net::HTTP::Post.new(url.path)
       req.set_form_data({
@@ -44,22 +42,39 @@ module SimpleCredomaticPaycon
 
       sock = Net::HTTP.new(url.host, url.port)
       sock.use_ssl = true
-      res = sock.start {|http| http.request(req) }
+      res = sock.start {|http| http.request(req) }      
 
       case res
+      #  Response to 2xx y 3xx
       when Net::HTTPSuccess, Net::HTTPRedirection
-        puts YAML::dump(res)
-        puts "Cadena FInal"
-        respuesta = res.fetch('location')
-        a_respuesta = URI.decode_www_form(respuesta)
-        h_respuesta = Hash[a_respuesta]
-        puts h_respuesta
-      else
-        puts 'Huston - hubo un problema problema :/'
-        res.value
-      end
 
-      {}
+        respuesta = res.fetch('location')
+        a_response = URI.decode_www_form(respuesta)
+        h_response = Hash[a_response]
+
+        puts "Dump de la respuesta en YAML"
+        puts YAML::dump(res)
+
+        puts "Parametros devuelvos en location convertido en Hash"
+        puts h_response
+
+
+        return h_response
+      # response to 4xx Error
+      when Net::HTTPClientError
+        puts "Error 4xx D:"
+
+        # { code: res.code  }
+        {}
+      else
+        # TODO: 
+        puts 'Huston - hubo un problema problema :/'        
+        puts res.value
+
+        # Return a Hash with error
+        # { code: res.code  }
+        {}
+      end    
 
     end
 

@@ -48,6 +48,7 @@ Ex: 2.256 will be 2.26
 ## Changelog
 
 This project uses [Semantic Versioning](http://semver.org/) for release numbering.
+For changelog notes, checkout [CHANGELOG.md](CHANGELOG.md).
 
 ## Contributing
 
