@@ -1,4 +1,5 @@
 require "simple_credomatic_paycon/version"
+require "simple_credomatic_paycon/configuration"
 require "simple_credomatic_paycon/transaction"
 
 begin
@@ -8,5 +9,21 @@ end
 
 
 module SimpleCredomaticPaycon
-  # Your code goes here...
+
+  class << self
+    attr_accessor :configuration
+
+    # def configure
+    # end
+
+  end
+
+  def self.configuration
+    @configuration ||= Configuration.new
+  end
+
+  def self.configure
+    yield(configuration)
+  end
+
 end

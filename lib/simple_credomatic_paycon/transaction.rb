@@ -1,6 +1,6 @@
 require 'time'
 require 'yaml'
-require 'net/https'
+require 'net/http'
 require 'uri'
 require 'digest/md5'
 
@@ -21,7 +21,7 @@ module SimpleCredomaticPaycon
     end
 
     def process
-      time = Time.now.to_i
+      time = Time.now.to_i.to_s
       hash = Digest::MD5.hexdigest("#{@orderid}|#{@amount}|#{time}|#{@key}")
 
       url = URI.parse("https://paycom.credomatic.com/PayComBackEndWeb/common/requestPaycomService.go")
@@ -42,7 +42,19 @@ module SimpleCredomaticPaycon
 
       sock = Net::HTTP.new(url.host, url.port)
       sock.use_ssl = true
-      res = sock.start {|http| http.request(req) }      
+      res = sock.start {|http| http.request(req) }
+
+      parse_reponse(res)
+    end
+
+    def parse_reponse(res)
+
+      if SimpleCredomaticPaycon.configuration.show_trace
+        puts "Credomatic Raw response:"
+        puts "-------------"
+        puts YAML::dump(res)
+        puts "-------------"
+      end
 
       case res
       #  Response to 2xx y 3xx
@@ -52,30 +64,30 @@ module SimpleCredomaticPaycon
         a_response = URI.decode_www_form(respuesta)
         h_response = Hash[a_response]
 
-        puts "Dump de la respuesta en YAML"
-        puts YAML::dump(res)
-
-        puts "Parametros devuelvos en location convertido en Hash"
-        puts h_response
-
+        # if SimpleCredomaticPaycon.configuration.trace_hash_response
+        #   puts "Location params reponse"
+        #   puts "-------------"          
+        #   puts h_response
+        #   puts "-------------"          
+        # end
 
         return h_response
       # response to 4xx Error
       when Net::HTTPClientError
-        puts "Error 4xx D:"
+        puts "Error 4xx D:" if SimpleCredomaticPaycon.configuration.show_trace
 
+        # TODO:
+        # Return a Hash with error 
         # { code: res.code  }
         {}
       else
-        # TODO: 
-        puts 'Huston - hubo un problema problema :/'        
-        puts res.value
+        puts 'Huston - We have an unknown problem :/' if SimpleCredomaticPaycon.configuration.show_trace   
 
+        # TODO: 
         # Return a Hash with error
         # { code: res.code  }
         {}
-      end    
-
+      end  
     end
 
   end
