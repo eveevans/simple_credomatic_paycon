@@ -39,9 +39,9 @@ response = product_transaction.process
 ```
 
 ### Trace errors on Credomatic response.
-```
+``` ruby
 SimpleCredomaticPaycon.configure do |config|
-  config.trace_raw_response = true
+  config.show_trace = true
 end
 ```
 
